@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Queue Calculator</title>
+    <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='style.css')}}">
+</head>
+<body>
+    <header><h1>Queue</h1></header>
+    <section class="input_section">
+        <div class="input_section_data">
+            <label class="input_section_label">λ</label>
+            <input type="number" id="lambda" placeholder="Arrival Rate">
+        </div>
+        <div class="input_section_data">
+            <label class="input_section_label">μ</label>
+            <input type="number" id="mu" placeholder="Service Rate">
+        </div>
+        <div class="input_section_data" id="input_servers">
+            <label class="input_section_label">s</label>
+            <input type="number" id="servers" placeholder="Number of servers">
+        </div>
+        <div class="input_section_data">
+            <label class="input_section_label">k</label>
+            <input type="number" id="capacity" placeholder="Capacity">
+        </div>
+        <div class="switch">
+            <label for="server-switch">Custom server</label>
+            <input type="checkbox" id="server-switch" onclick="toggleServerInput()">
+        </div>
+        <button class="input_button" onclick="calculate()">Calculate</button>
+    </section>
+    <section class="result">
+        <div class="result__header">
+            <h3>System <span id="system_name"></span></h3>
+            <div class="result__header_extra">
+                <p>No. Servers <span id="no_servers"></span></p>
+                <p>Capacity <span id="r_capacity"></span></p>
+                <p>Utilization factor <span id="u_factor"></span></p>
+            </div>
+        </div>
+        <div class="result__labels">
+            <div class="result_label">
+                <label>Customer arrival rate λ</label>
+                <p></p>
+            </div>
+            <div class="result_label">
+                <label>Customer service rate μ</label>
+                <p></p>
+            </div>
+            <hr class="result__hr"/>
+            <p>Expected number of customers</p>
+            <div class="result_label">
+                <label>In the system</label>
+                <p></p>
+            </div>
+            <div class="result_label">
+                <label>In the queue</label>
+                <p></p>
+            </div>
+            <hr class="result__hr"/>
+            <p>Expected time a customer spends</p>
+            <div class="result_label">
+                <label>In the system</label>
+                <p></p>
+            </div>
+            <div class="result_label">
+                <label>In the queue</label>
+                <p></p>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        function calculate() {
+            const lambdaValue = document.getElementById('lambda').value;
+            const muValue = document.getElementById('mu').value;
+            const serversValue = document.getElementById('servers').value;
+            const capacityValue = document.getElementById('capacity').value;
+
+            const data = {
+                lambda: lambdaValue,
+                mu: muValue,
+                servers: serversValue,
+                capacity: capacityValue
+            };
+
+            axios.post('/api/calculate', data)
+                .then(response => {
+                    document.getElementById('system-title').innerText = "System " + response.data.system_name;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+        function toggleServerInput() {
+            const contServerInput = document.getElementById('input_servers');
+            const systemName = document.getElementById('system_name');
+            const serverInput = document.getElementById('servers');
+            const switchElement = document.getElementById('server-switch');
+            serverInput.disabled = !switchElement.checked;
+            systemName.textContent = serverInput.disabled ? 'M/M/1' : 'M/M/S';
+            serverInput.value = serverInput.disabled ? 1 : '';
+            contServerInput.style.opacity = serverInput.disabled ? 0.5 : 1;
+            contServerInput.style.opacity = serverInput.disabled ? 'none': 'auto';
+        }
+    </script>
+</body>
+</html>

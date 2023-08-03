@@ -25,7 +25,6 @@ class MMM1K:
         
         return ((1 - self._rho) / (1 - self._rho ** (self.k + 1))) * (self._rho ** n)
     
-    
     def get_l(self):
         """
         Returns the expected number of customers in the system.
@@ -65,6 +64,3 @@ class MMM1K:
                 Expected time a customer spends in the system: {self.get_w()}
                 Expected time a customer spends in the queue: {self.get_wq()}
             """)
-
-s = MMM1K(lamb=18, mu=6, k=4)
-s.result()
