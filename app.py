@@ -9,7 +9,7 @@ def index():
 @app.route('/api/calculate', methods=['POST'])
 def calculate():
     data = request.json
-
+    print(data)
     response = {
         'data': {},
         'message': '',

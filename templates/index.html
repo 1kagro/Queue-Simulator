@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Queue Calculator</title>
     <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='style.css')}}">
+    <script src="{{url_for('static', filename='script.js')}}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 <body>
     <header><h1>Queue</h1></header>
@@ -71,40 +73,5 @@
             </div>
         </div>
     </section>
-
-    <script>
-        function calculate() {
-            const lambdaValue = document.getElementById('lambda').value;
-            const muValue = document.getElementById('mu').value;
-            const serversValue = document.getElementById('servers').value;
-            const capacityValue = document.getElementById('capacity').value;
-
-            const data = {
-                lambda: lambdaValue,
-                mu: muValue,
-                servers: serversValue,
-                capacity: capacityValue
-            };
-
-            axios.post('/api/calculate', data)
-                .then(response => {
-                    document.getElementById('system-title').innerText = "System " + response.data.system_name;
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-        }
-        function toggleServerInput() {
-            const contServerInput = document.getElementById('input_servers');
-            const systemName = document.getElementById('system_name');
-            const serverInput = document.getElementById('servers');
-            const switchElement = document.getElementById('server-switch');
-            serverInput.disabled = !switchElement.checked;
-            systemName.textContent = serverInput.disabled ? 'M/M/1' : 'M/M/S';
-            serverInput.value = serverInput.disabled ? 1 : '';
-            contServerInput.style.opacity = serverInput.disabled ? 0.5 : 1;
-            contServerInput.style.opacity = serverInput.disabled ? 'none': 'auto';
-        }
-    </script>
 </body>
 </html>
