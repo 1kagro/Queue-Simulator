@@ -9,69 +9,29 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 <body>
-    <header><h1>Queue</h1></header>
-    <section class="input_section">
+    <header><h1>Queue <span id="system_name"></span></h1></header>
+    <form class="input_section">
         <div class="input_section_data">
             <label class="input_section_label">λ</label>
-            <input type="number" id="lambda" placeholder="Arrival Rate">
+            <input class="required-number" type="number" id="lambda" min="1" placeholder="Arrival Rate" required>
         </div>
         <div class="input_section_data">
             <label class="input_section_label">μ</label>
-            <input type="number" id="mu" placeholder="Service Rate">
+            <input class="required-number" type="number" id="mu" min="1" placeholder="Service Rate" required>
         </div>
         <div class="input_section_data" id="input_servers">
             <label class="input_section_label">s</label>
-            <input type="number" id="servers" placeholder="Number of servers">
+            <input class="required-number" type="number" id="servers" min="1" placeholder="Number of servers" required>
         </div>
         <div class="input_section_data">
             <label class="input_section_label">k</label>
-            <input type="number" id="capacity" placeholder="Capacity">
+            <input class="optional-number" type="number" id="capacity" min="1" placeholder="Capacity">
         </div>
         <div class="switch">
             <label for="server-switch">Custom server</label>
-            <input type="checkbox" id="server-switch" onclick="toggleServerInput()">
+            <input type="checkbox" id="server-switch" min="1" onclick="toggleServerInput()">
         </div>
         <button class="input_button" onclick="calculate()">Calculate</button>
-    </section>
-    <section class="result">
-        <div class="result__header">
-            <h3>System <span id="system_name"></span></h3>
-            <div class="result__header_extra">
-                <p>No. Servers <span id="no_servers"></span></p>
-                <p>Capacity <span id="r_capacity"></span></p>
-                <p>Utilization factor <span id="u_factor"></span></p>
-            </div>
-        </div>
-        <div class="result__labels">
-            <div class="result_label">
-                <label>Customer arrival rate λ</label>
-                <p></p>
-            </div>
-            <div class="result_label">
-                <label>Customer service rate μ</label>
-                <p></p>
-            </div>
-            <hr class="result__hr"/>
-            <p>Expected number of customers</p>
-            <div class="result_label">
-                <label>In the system</label>
-                <p></p>
-            </div>
-            <div class="result_label">
-                <label>In the queue</label>
-                <p></p>
-            </div>
-            <hr class="result__hr"/>
-            <p>Expected time a customer spends</p>
-            <div class="result_label">
-                <label>In the system</label>
-                <p></p>
-            </div>
-            <div class="result_label">
-                <label>In the queue</label>
-                <p></p>
-            </div>
-        </div>
-    </section>
+    </form>
 </body>
 </html>

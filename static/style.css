@@ -14,18 +14,17 @@ body {
     background-color: #3A4764;
     font-size: 1.6rem;
     display: flex;
-    justify-content: space-evenly;
+    justify-content: center;
     align-items: center;
     flex-direction: column;
     height: 100vh;
+    row-gap: 4rem;
 }
 
 .border-r-2 {
     border-right: 2px;
 }
-.input_section {
-    max-width: 562px;
-}
+
 .input_section {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -34,6 +33,7 @@ body {
     background-color: #182034;
     padding: 2.8rem;
     border-radius: 0.4rem;
+    max-width: 562px;
 }
 
 
@@ -65,7 +65,7 @@ body {
 .switch {
     display: flex;
     width: 100%;
-    height: 24px;
+    /* height: 24px; */
     cursor: pointer;
     flex-direction: row;
     flex-wrap: nowrap;
@@ -207,8 +207,16 @@ body {
 }
 
 
+.error-message {
+    color: red;
+    font-size: 12px;
+    display: block;
+    margin-top: 5px;
+}
+
+
 input {
-    padding: 0.4rem 0.3rem;
+    padding: 0 1rem;
     width: 100%;
     border-width: 0;
     border-style: solid;
@@ -217,4 +225,12 @@ input {
 
 input:focus {
     outline: none;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -moz-appearance: textfield;
+    -webkit-appearance: none;
+    appearance: none;
+    margin: 0;
 }
