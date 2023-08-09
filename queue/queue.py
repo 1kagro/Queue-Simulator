@@ -18,6 +18,9 @@ class Queue:
         if self.k is not None:
             self.system_name += '/' + str(self.k)
 
+            model = MM1K(self.mu, self.lamb, self.k)
+            
         
+
         
         

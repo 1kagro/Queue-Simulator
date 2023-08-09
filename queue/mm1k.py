@@ -1,8 +1,8 @@
 import math
 
-class MMM1K:
+class MM1K:
     
-    def __init__(self, mu, lamb, k) -> None:
+    def __init__(self, mu: float, lamb: float, k: int) -> None:
         self.mu = mu
         self.lamb = lamb
         self.k = k
