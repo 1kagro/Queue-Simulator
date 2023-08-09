@@ -10,28 +10,29 @@
 </head>
 <body>
     <header><h1>Queue <span id="system_name"></span></h1></header>
-    <form class="input_section">
+    <form class="input_section" id="form">
         <div class="input_section_data">
             <label class="input_section_label">λ</label>
-            <input class="required-number" type="number" id="lambda" min="1" placeholder="Arrival Rate" required>
+            <input class="required-number" type="numeric" id="lambda" pattern="^(?=.*[1-9])\d*(?:\.\d+)?$" placeholder="Arrival Rate" required>
         </div>
         <div class="input_section_data">
             <label class="input_section_label">μ</label>
-            <input class="required-number" type="number" id="mu" min="1" placeholder="Service Rate" required>
+            <input class="required-number" type="numeric" id="mu" pattern="^(?=.*[1-9])\d*(?:\.\d+)?$" placeholder="Service Rate" required>
         </div>
         <div class="input_section_data" id="input_servers">
             <label class="input_section_label">s</label>
-            <input class="required-number" type="number" id="servers" min="1" placeholder="Number of servers" required>
+            <input class="required-number" type="number" id="servers" pattern="^(?=.*[1-9])\d*?$" placeholder="Number of servers" required>
         </div>
         <div class="input_section_data">
             <label class="input_section_label">k</label>
-            <input class="optional-number" type="number" id="capacity" min="1" placeholder="Capacity">
+            <input class="optional-number" type="number" id="capacity" pattern="^(?=.*[1-9])\d*?$" placeholder="Capacity">
         </div>
         <div class="switch">
             <label for="server-switch">Custom server</label>
-            <input type="checkbox" id="server-switch" min="1" onclick="toggleServerInput()">
+            <input type="checkbox" id="server-switch" onclick="toggleServerInput()">
         </div>
-        <button class="input_button" onclick="calculate()">Calculate</button>
+        <button class="input_button">Calculate</button>
     </form>
+    <div class="error-message"></div>
 </body>
 </html>

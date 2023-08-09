@@ -4,14 +4,14 @@ function calculate() {
     const serversValue = document.getElementById('servers').value;
     const capacityValue = document.getElementById('capacity').value;
 
-    const data = {
-        lambda: lambdaValue,
-        mu: muValue,
-        servers: serversValue,
-        capacity: capacityValue
+    const requestBody = {
+        lambda: parseFloat(lambdaValue),
+        mu: parseFloat(muValue),
+        servers: parseInt(serversValue),
+        capacity: parseInt(capacityValue) || 0
     };
 
-    axios.post('/api/calculate', data)
+    axios.post('/api/calculate', requestBody)
         .then(response => {
             document.getElementById('system-title').innerText = "System " + response.data.system_name;
         })
@@ -33,49 +33,54 @@ function toggleServerInput() {
     contServerInput.style.opacity = serverInput.disabled ? 'none' : 'auto';
 }
 
-function validateNumber(input) {
+function validateNumber(input, errorMessage) {
     const value = parseFloat(input.value);
     const isOptional = input.classList.contains('optional-number');
-    const errorMessage = isOptional ? "El número opcional debe ser mayor o igual a 1." : "Este campo es obligatorio y debe ser mayor o igual a 1.";
+    const message = isOptional ? "El número debe ser mayor que cero" : "Este campo es obligatorio y debe ser mayor que cero";
 
     if (document.activeElement === input) {
-        if ((!isOptional && (isNaN(value) || value < 1)) || (isOptional && !isNaN(value) && value < 1)) {
-            showError(input, errorMessage);
+        if ((!isOptional && (isNaN(value) || value <= 0)) || (isOptional && !isNaN(value) && value <= 0)) {
+            showError(input, message, errorMessage);
         } else {
-            hideError(input);
+            hideError(input, errorMessage);
         }
     }
 }
 
-function showError(input, message) {
-    input.classList.add('error');
-    let errorElement = input.nextElementSibling;
+function showError(input, message, errorMessage) {
+    const parentContainer = input.closest('.input_section_data');
+    parentContainer?.classList.add('error', 'error-shake');
 
-    if (!errorElement || !errorElement.classList.contains('error-message')) {
-        errorElement = document.createElement('span');
-        errorElement.className = 'error-message';
-        input.insertAdjacentElement('afterend', errorElement);
-    }
+    errorMessage.textContent = message;
+    errorMessage.style.opacity = 1;
 
-    errorElement.textContent = message;
+    setTimeout(() => {
+        errorMessage.style.opacity = 0;
+    }, 5000);
 }
 
-function hideError(input) {
-    input.classList.remove('error');
-    const errorElement = input.nextElementSibling;
-
-    if (errorElement && errorElement.classList.contains('error-message')) {
-        errorElement.remove();
-    }
+function hideError(input, errorMessage) {
+    input.classList.remove('error', 'error-shake');
+    errorMessage.style.opacity = 0;
 }
 
 
 document.addEventListener("DOMContentLoaded", function () {
     toggleServerInput();
+    var errorMessage = document.querySelector('.error-message');
+    var inputs = document.querySelectorAll('.required-number, .optional-number');
+    console.log(inputs)
+    inputs.forEach(input => {
+        input.addEventListener('input', () => validateNumber(input, errorMessage))
+    });
 
-    // var inputs = document.querySelectorAll('.required-number, .optional-number');
-    // console.log(inputs)
-    // inputs.forEach(input => {
-    //     input.addEventListener('input', () => validateNumber(input))
-    // });
+    var form = document.getElementById('form');
+    form.addEventListener('submit', (event) => {
+        event.preventDefault()
+
+        if (form.checkValidity()) {
+            calculate();
+        }
+
+    })
 });
