@@ -34,31 +34,36 @@ function toggleServerInput() {
 }
 
 function validateNumber(input) {
+    const value = parseFloat(input.value);
+    const isOptional = input.classList.contains('optional-number');
+    const errorMessage = isOptional ? "El número opcional debe ser mayor o igual a 1." : "Este campo es obligatorio y debe ser mayor o igual a 1.";
 
-    var value = parseFloat(input.value);
-    var errorMessage = "Este campo es obligatorio y debe ser mayor o igual a 1.";
-
-    if (input.classList.contains('optional-number') && (isNaN(value) || value >= 1)) {
-        input.setCustomValidity('');
-    } else if (!isNaN(value) && value >= 1) {
-        input.setCustomValidity('');
-    } else {
-        input.setCustomValidity(errorMessage);
+    if (document.activeElement === input) {
+        if ((!isOptional && (isNaN(value) || value < 1)) || (isOptional && !isNaN(value) && value < 1)) {
+            showError(input, errorMessage);
+        } else {
+            hideError(input);
+        }
     }
 }
 
-function showErrorMessage(input, message) {
-    var errorElement = input.nextElementSibling;
+function showError(input, message) {
+    input.classList.add('error');
+    let errorElement = input.nextElementSibling;
+
     if (!errorElement || !errorElement.classList.contains('error-message')) {
         errorElement = document.createElement('span');
         errorElement.className = 'error-message';
         input.insertAdjacentElement('afterend', errorElement);
     }
+
     errorElement.textContent = message;
 }
 
-function hideErrorMessage(input) {
-    var errorElement = input.nextElementSibling;
+function hideError(input) {
+    input.classList.remove('error');
+    const errorElement = input.nextElementSibling;
+
     if (errorElement && errorElement.classList.contains('error-message')) {
         errorElement.remove();
     }
@@ -67,11 +72,10 @@ function hideErrorMessage(input) {
 
 document.addEventListener("DOMContentLoaded", function () {
     toggleServerInput();
-});
 
-var inputs = document.querySelectorAll('.required-number, .optional-number');
-inputs.forEach(function (input) {
-    input.addEventListener('input', function () {
-        validateNumber(input);
-    });
+    // var inputs = document.querySelectorAll('.required-number, .optional-number');
+    // console.log(inputs)
+    // inputs.forEach(input => {
+    //     input.addEventListener('input', () => validateNumber(input))
+    // });
 });
