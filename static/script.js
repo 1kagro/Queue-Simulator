@@ -25,15 +25,16 @@ function toggleServerInput() {
     const systemName = document.getElementById('system_name');
     const serverInput = document.getElementById('servers');
     const switchElement = document.getElementById('server-switch');
-    console.log(switchElement)
     serverInput.disabled = !switchElement.checked;
-    systemName.textContent = serverInput.disabled ? 'M/M/1' : 'M/M/S';
+    systemPrefix = serverInput.disabled ? 'M/M/1' : 'M/M/S';
+    systemName.textContent = `${systemPrefix}${systemName.textContent.substring(5)}`
     serverInput.value = serverInput.disabled ? 1 : '';
     contServerInput.style.opacity = serverInput.disabled ? 0.5 : 1;
     contServerInput.style.opacity = serverInput.disabled ? 'none' : 'auto';
 }
 
 function validateNumber(input, errorMessage) {
+    const systemName = document.getElementById('system_name');
     const value = parseFloat(input.value);
     const isOptional = input.classList.contains('optional-number');
     const message = isOptional ? "El número debe ser mayor que cero" : "Este campo es obligatorio y debe ser mayor que cero";
@@ -41,9 +42,27 @@ function validateNumber(input, errorMessage) {
     if (document.activeElement === input) {
         if ((!isOptional && (isNaN(value) || value <= 0)) || (isOptional && !isNaN(value) && value <= 0)) {
             showError(input, message, errorMessage);
+            return false;
         } else {
             hideError(input, errorMessage);
         }
+
+    }
+    
+    if (input.id == 'capacity') {
+        if (input.value === '') {
+            systemName.textContent = systemName.textContent.replace('/K', '');
+        } else if (!systemName.textContent.includes('/K')) {
+            systemName.textContent += '/K';
+        }
+        // const serversInput = document.getElementById('servers');
+        // const capacityValue = parseInt(input.value);
+        // const serversValue = parseInt(serversInput.value);
+        // if (capacityValue < serversValue) {
+        //     showError(input, "La capacidad debe ser mayor o igual que el número de servidores", errorMessage);
+        // } else {
+        //     hideError(input, errorMessage);
+        // }
     }
 }
 

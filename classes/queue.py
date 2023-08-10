@@ -2,6 +2,9 @@ from .mm1 import MM1
 from .mms import MMS
 from .mm1k import MM1K
 from .mmsk import MMSK
+
+from utils.Exception import InvalidAPIUsage
+
 class Queue:
     def __init__(self, lamb, mu, s = None, k = None) -> None:
         self.lamb = lamb
@@ -13,19 +16,25 @@ class Queue:
     def calculate_queue(self) -> dict:
         try:
             self.system_name += str(self.s)
+            model_attrs = {'mu': self.mu, 'lamb': self.lamb}
             
             if self.k not in [None, 0]:
                 self.system_name += f'/{self.k}'
                 model_class = MM1K if self.s == 1 else MMSK
+                model_attrs['k'] = self.k
+                if model_class == MMSK:
+                    model_attrs['s'] = self.s
             else:
                 model_class = MM1 if self.s == 1 else MMS
-            
-            model = model_class(self.mu, self.lamb, self.k) if self.k not in [None, 0] else model_class(self.mu, self.lamb)
-            
-            if model.get_rho() >= 1:
-                raise Exception('The system is unstable')
-            
-            return {
+                if model_class == MMS:
+                    model_attrs['s'] = self.s
+                
+            model = model_class(**model_attrs)
+            print(self.system_name, model.get_rho())
+            if 0 > model.get_rho() > 1 :
+                raise InvalidAPIUsage('The system is unstable')
+            print(model.__class__)
+            response = {
                 'system_name': self.system_name,
                 'lamb': self.lamb,
                 'mu': self.mu,
@@ -37,7 +46,23 @@ class Queue:
                 'w': model.get_w(),
                 'wq': model.get_wq(),
                 'p0': model.get_pn(0),
-                'pn': [model.get_pn(i) for i in range(1, self.k + 1)],
+                'pn': []
             }
+            
+            if self.k not in [None, 0]:
+                response['pn'] = [model.get_pn(n) for n in range(0, self.k + 1)]
+            else:
+                last_probability = 0
+                n = 0
+                while last_probability <= 1:
+                    last_probability = model.get_pn(n)
+                    response['pn'].append(model.get_pn(n))
+                    n += 1
+                    print('n', n)
+                    print(last_probability)
+                # pass
+            
+            print(response)
+            return response
         except Exception as e:
             raise e

@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request,jsonify
 from utils.Exception import InvalidAPIUsage
 from classes.queue import Queue
+import traceback
 
 app = Flask(__name__)
 
@@ -21,23 +22,22 @@ def calculate():
 
         for field in required_fields:
             if data.get(field) is None:
-                raise InvalidAPIUsage(
-                    f'Missing field: {field}',
-                    status_code=400
-                )
+                raise InvalidAPIUsage(f'Missing field: {field}')
 
         response = Queue(
             data['lambda'],
             data['mu'],
-            data['s'],
-            data.get('k', None)
+            data['servers'],
+            data.get('capacity', None)
         ).calculate_queue()
         
         return jsonify(response), 200
     except InvalidAPIUsage as e:
+        traceback.print_exc()
         raise e
     except Exception as e:
         print(e)
+        traceback.print_exc()
         raise InvalidAPIUsage(
             'Internal server error',
             status_code=500
