@@ -7,12 +7,16 @@
 html {
     font-size: 62.5%;
     color: #fff;
+    scroll-behavior: smooth;
 }
 
 body {
     font-family: 'Roboto', sans-serif;
     background-color: #3A4764;
     font-size: 1.6rem;
+}
+
+main {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -21,12 +25,33 @@ body {
     row-gap: 4rem;
 }
 
+a {
+    text-decoration: none;
+}
+
+#upButton,
+#downButton {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+}
+
+.visible {
+    display: flex;
+}
+
 .border-r-2 {
     border-right: 2px;
 }
 
 .input_section {
     display: grid;
+    margin: 0 4px;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: auto auto;
     grid-gap: 2rem;
@@ -143,12 +168,29 @@ body {
 }
 
 .result {
+    display: none;
+    height: 100vh;
+    padding: 0 10px;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+section:nth-child(2) {
+    background-image: linear-gradient(to top, #1E1F4A 0%, #3a4764 100%);
+}
+
+section:nth-child(3) {
+    background-image: linear-gradient(to top, #1F3D57 0%, #1e1f4a 100%);
+}
+
+.result__table {
     padding-top: 1rem;
     width: 662px;
     background-color: #232C43;
 }
 
 .result_label > p {
+    margin-top: 1rem;
     padding: 1rem 0.7rem;
     border-bottom: 0.5px solid #e5e7eb;
     background-color: #3A4764;
@@ -157,9 +199,10 @@ body {
 .result__header {
     display: flex;
     position: relative;
-    flex-direction: row;
-    justify-content: center;
     padding: 2rem;
+    flex-direction: column;
+    row-gap: 0.5rem;
+    justify-content: center;
     align-items: center;
 }
 
@@ -168,8 +211,9 @@ body {
 }
 
 .result__header_extra {
-    position: absolute;
+    /* position: absolute; */
     right: 4rem;
+    font-size: 1.4rem;
     text-align: start;
     margin: 0;
 }
@@ -178,7 +222,6 @@ body {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: auto auto;
-    grid-gap: 1.2rem;
     column-gap: 5rem;
     background-color: #182034;
     padding: 2.8rem;
@@ -187,6 +230,7 @@ body {
 }
 
 .result__labels > p {
+    margin-bottom: 1rem;
     grid-column: 1 / span 2;
     font-size: 1.4rem;
 }
@@ -199,11 +243,16 @@ body {
 
 
 .result__hr {
+    margin: 1rem 0;
     grid-column: 1 / span 2;
     height: 1px;
     border: 0;
     background-color: #637097;
-    margin-top: 1rem;
+}
+
+.probabilityNoCustomer {
+    width: 100%;
+    background-color: #1f3d57;
 }
 
 
@@ -270,3 +319,11 @@ input:-webkit-autofill:active {
     -webkit-box-shadow: 0 0 0 30px #2196f3  inset;
     -webkit-text-fill-color: #fff;
 } */
+
+@media (min-width: 768px) {
+
+    .result__header_extra {
+        position: absolute;
+        font-size: 1.6rem;
+    }
+}

@@ -7,32 +7,113 @@
     <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='style.css')}}">
     <script src="{{url_for('static', filename='script.js')}}"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <header><h1>Queue <span id="system_name"></span></h1></header>
-    <form class="input_section" id="form">
-        <div class="input_section_data">
-            <label class="input_section_label">λ</label>
-            <input class="required-number" type="numeric" id="lambda" pattern="^(?=.*[1-9])\d*(?:\.\d+)?$" placeholder="Arrival Rate" required>
+    <main id="main_content">
+        <header><h1>Queue <span id="system_name"></span></h1></header>
+        <form class="input_section" id="form">
+            <div class="input_section_data">
+                <label class="input_section_label">λ</label>
+                <input class="required-number" type="numeric" id="lambda" pattern="^(?=.*[1-9])\d*(?:\.\d+)?$" placeholder="Arrival Rate" required>
+            </div>
+            <div class="input_section_data">
+                <label class="input_section_label">μ</label>
+                <input class="required-number" type="numeric" id="mu" pattern="^(?=.*[1-9])\d*(?:\.\d+)?$" placeholder="Service Rate" required>
+            </div>
+            <div class="input_section_data" id="input_servers">
+                <label class="input_section_label">s</label>
+                <input class="required-number" type="number" id="servers" pattern="^(?=.*[1-9])\d*?$" placeholder="Number of servers" required>
+            </div>
+            <div class="input_section_data">
+                <label class="input_section_label">k</label>
+                <input class="optional-number" type="number" id="capacity" pattern="^(?=.*[1-9])\d*?$" placeholder="Capacity">
+            </div>
+            <div class="switch">
+                <label for="server-switch">Custom server</label>
+                <input type="checkbox" id="server-switch" onclick="toggleServerInput()">
+            </div>
+            <button class="input_button">Calculate</button>
+        </form>
+        <div class="error-message"></div>
+    </main>
+    <section class="result" id="result">
+        <div class="result__table">
+            <div class="result__header">
+                <h3 id="result_system_name"></h3>
+                <div class="result__header_extra">
+                    <p>No. Servers: <span id="no_servers"></span></p>
+                    <p>Capacity: <span id="r_capacity"></span></p>
+                    <p>Utilization factor: <span id="u_factor"></span></p>
+                </div>
+            </div>
+            <div class="result__labels">
+                <div class="result_label">
+                    <label>Customer arrival rate λ</label>
+                    <p id="result_lambda"></p>
+                </div>
+                <div class="result_label">
+                    <label>Customer service rate μ</label>
+                    <p id="result_mu"></p>
+                </div>
+                <hr class="result__hr"/>
+                <p>Expected number of customers (L)</p>
+                <div class="result_label">
+                    <label>In the system</label>
+                    <p id="ls"></p>
+                </div>
+                <div class="result_label">
+                    <label>In the queue</label>
+                    <p id="lq"></p>
+                </div>
+                <hr class="result__hr"/>
+                <p>Expected time a customer spends (W)</p>
+                <div class="result_label">
+                    <label>In the system</label>
+                    <p id="ws"></p>
+                </div>
+                <div class="result_label">
+                    <label>In the queue</label>
+                    <p id="wq"></p>
+                </div>
+            </div>
         </div>
-        <div class="input_section_data">
-            <label class="input_section_label">μ</label>
-            <input class="required-number" type="numeric" id="mu" pattern="^(?=.*[1-9])\d*(?:\.\d+)?$" placeholder="Service Rate" required>
+    </section>
+    <section class="result" id="result_graphic">
+        <div class="result__table">
+            <h3 class="result__header">Probability n that there are n customers in the system at time t</h3>
+            <canvas id="probabilityNoCustomer"></canvas>
         </div>
-        <div class="input_section_data" id="input_servers">
-            <label class="input_section_label">s</label>
-            <input class="required-number" type="number" id="servers" pattern="^(?=.*[1-9])\d*?$" placeholder="Number of servers" required>
+    </section>
+    <section class="result" id="economic">
+        <div class="result__table">
+            <h3 class="result__header">Economic analysis</h3>
+            <div class="result__labels">
+                <div class="result_label">
+                    <label>Cost service (cs)</label>
+                    <p id="cs"></p>
+                </div>
+                <div class="result_label">
+                    <label>Cost of waiting (cq)</label>
+                    <p id="cq"></p>
+                </div>
+                <hr class="result__hr"/>
+                <div class="result_label">
+                    <label>Total cost of waiting</label>
+                    <p id="CQ"></p>
+                </div>
+                <div class="result_label">
+                    <label>Total cost of service</label>
+                    <p id="CS"></p>
+                </div>
+                <div class="result_label">
+                    <label>Total cost in system</label>
+                    <p id="CTS"></p>
+                </div>
+            </div>
         </div>
-        <div class="input_section_data">
-            <label class="input_section_label">k</label>
-            <input class="optional-number" type="number" id="capacity" pattern="^(?=.*[1-9])\d*?$" placeholder="Capacity">
-        </div>
-        <div class="switch">
-            <label for="server-switch">Custom server</label>
-            <input type="checkbox" id="server-switch" onclick="toggleServerInput()">
-        </div>
-        <button class="input_button">Calculate</button>
-    </form>
-    <div class="error-message"></div>
+    </section>
+    <a id="upButton" href="#main_content">↑</a>
+    <!-- <button id="downButton">↓</button> -->
 </body>
 </html>

@@ -4,18 +4,44 @@ function calculate() {
     const serversValue = document.getElementById('servers').value;
     const capacityValue = document.getElementById('capacity').value;
 
+    const main = document.getElementById('main_content');
+    const loading = document.getElementById('loading');
+    const result = document.getElementById('result');
+    const result_graphic = document.getElementById('result_graphic');
+    const upButton = document.getElementById('upButton');
+    const downButton = document.getElementById('downButton');
+
     const requestBody = {
         lambda: parseFloat(lambdaValue),
         mu: parseFloat(muValue),
         servers: parseInt(serversValue),
         capacity: parseInt(capacityValue) || 0
     };
+    
+    // main.style.display = 'none';
+    result.style.display = 'flex';
+    result_graphic.style.display = 'flex';
 
     axios.post('/api/calculate', requestBody)
         .then(response => {
-            document.getElementById('system-title').innerText = "System " + response.data.system_name;
+            window.location.href = '#result';
+            upButton.style.display = 'block';
+            document.getElementById('result_system_name').innerText = "System " + response.data.system_name;
+            document.getElementById('result_lambda').innerText = response.data.lamb;
+            document.getElementById('result_mu').innerText = response.data.mu;
+            document.getElementById('no_servers').innerText = response.data.s;
+            document.getElementById('r_capacity').innerText = response.data.k;
+            document.getElementById('u_factor').innerText = response.data.rho;
+            document.getElementById('ls').innerText = response.data.l;
+            document.getElementById('ws').innerText = response.data.w;
+            document.getElementById('lq').innerText = response.data.lq;
+            document.getElementById('wq').innerText = response.data.wq;
+            graphic(response.data.pn);
         })
         .catch(error => {
+            // main.style.display = 'flex';
+            result.style.display = 'none';
+            window.location.href = '#main_content';
             console.error('Error:', error);
         });
 }
@@ -83,6 +109,34 @@ function hideError(input, errorMessage) {
     errorMessage.style.opacity = 0;
 }
 
+function graphic(probabilityValues) {
+    var ctx = document.getElementById('probabilityNoCustomer').getContext('2d');
+
+    const nValues = probabilityValues.map( function (value, index) { return index});
+
+    const probabilityNoCustomer = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: nValues.map(function (n) {
+                return 'n=' + n;
+            }),
+            datasets: [{
+                label: 'Customer probability in the system',
+                data: probabilityValues,
+                backgroundColor: 'rgba(75, 192, 192, 0.6)', // Color de las barras
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+}
+
 
 document.addEventListener("DOMContentLoaded", function () {
     toggleServerInput();
@@ -92,14 +146,18 @@ document.addEventListener("DOMContentLoaded", function () {
     inputs.forEach(input => {
         input.addEventListener('input', () => validateNumber(input, errorMessage))
     });
-
+    
+    let chartStatus = Chart.getChart('probabilityNoCustomer');
+    
     var form = document.getElementById('form');
     form.addEventListener('submit', (event) => {
         event.preventDefault()
 
         if (form.checkValidity()) {
+            if (chartStatus != undefined) {
+                chartStatus.destroy();
+            }
             calculate();
         }
-
     })
 });

@@ -12,11 +12,11 @@ class MMSK:
         self.__rho = self.lamb / self.mu
         self.__lamb_eff = self.lamb * (k - self.get_l())
     
-    @round_to_decimals(3)
+    @round_to_decimals()
     def get_rho(self):
         return self.lamb / (self.mu * self.k)
     
-    @round_to_decimals(3)
+    @round_to_decimals()
     def get_pn(self, n: int):
         """
         Returns the probability of having n customers in the system.
@@ -32,28 +32,28 @@ class MMSK:
 
         return (pow(self.__rho, n)/(factorial(self.s)*pow(self.s, n - self.s))) * self.get_pn(0)
 
-    @round_to_decimals(3)
+    @round_to_decimals()
     def get_lq(self):
         """
         Returns the expected number of customers in the queue.
         """
         return sum([(n - self.s) * self.get_pn(n) for n in range(self.s + 1, self.k + 1)])
     
-    @round_to_decimals(3)
+    @round_to_decimals()
     def get_l(self):
         """
         Returns the expected number of customers in the system.
         """
         return self.get_lq() + (self.__lamb_eff / self.mu)
     
-    @round_to_decimals(3)
+    @round_to_decimals()
     def get_wq(self):
         """
         Returns the expected time a customer spends in the queue.
         """
         return self.get_lq() / self.__lamb_eff
     
-    @round_to_decimals(3)
+    @round_to_decimals()
     def get_w(self):
         """
         Returns the expected time a customer spends in the system.

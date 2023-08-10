@@ -9,11 +9,11 @@ class MM1K:
         self._rho = self.lamb / self.mu
         self.lamb_eff = self.lamb * (1 - self.get_pn(self.k))
     
-    @round_to_decimals(3)
+    @round_to_decimals()
     def get_rho(self):
         return self._rho
     
-    @round_to_decimals(3)
+    @round_to_decimals()
     def get_pn(self, n: int):
         """
         Returns the probability of having n customers in the system.
@@ -25,9 +25,10 @@ class MM1K:
         if self._rho == 1:
             return 1 / (self.k + 1)
         
-        return ((1 - self._rho) / (1 - self._rho ** (self.k + 1))) * (self._rho ** n)
+        
+        return (1 - self._rho) / (1 - (self._rho ** (self.k + 1))) * (self._rho ** n)
     
-    @round_to_decimals(3)
+    @round_to_decimals()
     def get_l(self):
         """
         Returns the expected number of customers in the system.
@@ -36,21 +37,21 @@ class MM1K:
             return self.k / 2
         return (self._rho / (1 - self._rho)) - (((self.k + 1) * (self._rho ** (self.k + 1))) / (1 - self._rho ** (self.k + 1)))
     
-    @round_to_decimals(3)
+    @round_to_decimals()
     def get_lq(self):
         """
         Returns the expected number of customers in the queue.
         """
         return self.get_l() - (1 - self.get_pn(0))
     
-    @round_to_decimals(3)
+    @round_to_decimals()
     def get_w(self):
         """
         Returns the expected time a customer spends in the system.
         """
         return self.get_l() / self.lamb_eff
     
-    @round_to_decimals(3)
+    @round_to_decimals()
     def get_wq(self):
         """
         Returns the expected time a customer spends in the queue.
