@@ -1,4 +1,4 @@
-from math import factorial, sum, pow
+from math import factorial, pow
 
 class MMSK:
     

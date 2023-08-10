@@ -14,26 +14,31 @@ def index():
 
 @app.route('/api/calculate', methods=['POST'])
 def calculate():
-    
-    data = request.json
-    
-    required_fields = ['lambda', 'mu', 'servers']
-
-    for field in required_fields:
-        if data.get(field) is None:
-            raise InvalidAPIUsage(
-                f'Missing field: {field}',
-                status_code=400
-            )
+    try:
+        data = request.json
         
+        required_fields = ['lambda', 'mu', 'servers']
 
-    response = Queue(
-        data['lambda'],
-        data['mu'],
-        data['s'],
-        data.get('k', None)
-    ).calculate_queue()
-    
-    
-    print(data)
-    return jsonify(response), 200
+        for field in required_fields:
+            if data.get(field) is None:
+                raise InvalidAPIUsage(
+                    f'Missing field: {field}',
+                    status_code=400
+                )
+
+        response = Queue(
+            data['lambda'],
+            data['mu'],
+            data['s'],
+            data.get('k', None)
+        ).calculate_queue()
+        
+        return jsonify(response), 200
+    except InvalidAPIUsage as e:
+        raise e
+    except Exception as e:
+        print(e)
+        raise InvalidAPIUsage(
+            'Internal server error',
+            status_code=500
+        )
