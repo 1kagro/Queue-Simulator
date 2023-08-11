@@ -110,6 +110,11 @@ function hideError(input, errorMessage) {
 }
 
 function graphic(probabilityValues) {
+    
+    let chartStatus = Chart.getChart('probabilityNoCustomer');
+    if (chartStatus != undefined) {
+        chartStatus.destroy();
+    }
     var ctx = document.getElementById('probabilityNoCustomer').getContext('2d');
 
     const nValues = probabilityValues.map( function (value, index) { return index});
@@ -147,16 +152,13 @@ document.addEventListener("DOMContentLoaded", function () {
         input.addEventListener('input', () => validateNumber(input, errorMessage))
     });
     
-    let chartStatus = Chart.getChart('probabilityNoCustomer');
     
     var form = document.getElementById('form');
     form.addEventListener('submit', (event) => {
         event.preventDefault()
 
         if (form.checkValidity()) {
-            if (chartStatus != undefined) {
-                chartStatus.destroy();
-            }
+            
             calculate();
         }
     })

@@ -54,10 +54,11 @@ class Queue:
             else:
                 last_probability = 0
                 n = 0
-                while last_probability <= 1:
+                while True:
                     last_probability = model.get_pn(n)
                     response['pn'].append(model.get_pn(n))
                     n += 1
+                    if n == 100: break
                     print('n', n)
                     print(last_probability)
                 # pass

@@ -10,7 +10,7 @@ class MMSK:
         self.k = k
         self._rho = lamb / (self.s * mu)
         self.__rho = self.lamb / self.mu
-        self.__lamb_eff = self.lamb * (k - self.get_l())
+        self.__lamb_eff = self.lamb * sum([((self.k - n) * self.get_pn(n)) for n in range(0, self.k + 1)])
     
     @round_to_decimals()
     def get_rho(self):
